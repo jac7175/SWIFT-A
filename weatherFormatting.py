@@ -38,8 +38,8 @@ with h5py.File(pathTo, 'a') as f:
 
     f.create_dataset('latitude', data=np.float64(47.120138)) # latitude [deg north] of weather station dataset
     f['latitude'].attrs['units'] = 'degrees_north'
-    f.create_dataset('longitude', data=np.float64(88.552871)) # longitude [deg west] of weather station dataset
-    f['longitude'].attrs['units'] = 'degrees_west'
+    f.create_dataset('longitude', data=np.float64(-88.552871)) # longitude [deg east] of weather station dataset
+    f['longitude'].attrs['units'] = 'degrees_east'
 
     f.create_dataset('air_temperature', data=weatherFrame[' ATMP1 (&deg;C)']) # adds air temperature dataset
     f['air_temperature'].attrs['units'] = 'degC'
