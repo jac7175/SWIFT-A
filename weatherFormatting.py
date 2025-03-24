@@ -8,7 +8,7 @@ import os
 # Converts to standard CF format as outlined by CF-1.12: https://cfconventions.org/Data/cf-conventions/cf-conventions-1.12/cf-conventions.pdf
 # Exports an HDF5 file to 'pathTo'
 
-pathFrom = 'original/data/patj'
+pathFrom = 'original/data/path'
 pathTo = 'path/to/write/new/file/to'
 
 if os.path.exists(pathTo):
