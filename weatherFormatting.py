@@ -23,7 +23,7 @@ weatherFrame['dateTime'] = weatherFrame['dateTime'].dt.tz_localize('America/New_
 weatherFrame['dateTime'] = weatherFrame['dateTime'].dt.tz_convert('UTC') # converts the dateTime object to UTC
 
 with h5py.File(pathTo, 'a') as f:
-    f.attrs['title'] = 'SWIFT-A (Shallow Water Ice Fracture Tracking and Acoustics)'  # project title
+    f.attrs['title'] = 'SWIFT-A (Shallow Water Ice Fracture Tracking and Acoustics) weather'  # project title
     f.attrs['creator'] = 'John Arthur Case'  # project author
     f.attrs['description'] = 'Weather data to accompany SWIFT-A dataset' # description of data
     f.attrs['institution'] = 'Penn State University and Great Lakes Research Center, Michigan Technological University' # institutions involved
@@ -34,35 +34,47 @@ with h5py.File(pathTo, 'a') as f:
     f['datetime'].attrs['units'] = 'YYYY-MM-DDThh:mm:ss.sTZD'  # ISO string unit convention
     f['datetime'].attrs['unit_convention'] = 'ISO 8601'        # ISO string unit convention
     f['datetime'].attrs['calendar'] = 'standard'               # calendar convention
-    f['datetime'].attrs['long_name'] = 'calendar date'         # long name for CF convention
+    f['datetime'].attrs['long_name'] = 'calendar_date'         # long name for CF convention
+    f['datetime'].attrs['standard_name'] = 'date'
+    f['datetime'].attrs['description'] = 'UTC date time corresponding to each sample within each dataset in this file'
 
     f.create_dataset('latitude', data=np.float64(47.120138)) # latitude [deg north] of weather station dataset
     f['latitude'].attrs['units'] = 'degrees_north'
+    f['latitude'].attrs['standard_name'] = 'latitude'
     f.create_dataset('longitude', data=np.float64(-88.552871)) # longitude [deg east] of weather station dataset
     f['longitude'].attrs['units'] = 'degrees_east'
+    f['longitude'].attrs['standard_name'] = 'longitude'
 
     f.create_dataset('air_temperature', data=weatherFrame[' ATMP1 (&deg;C)']) # adds air temperature dataset
     f['air_temperature'].attrs['units'] = 'degC'
+    f['air_temperature'].attrs['standard_name'] = 'air_temperature'
     f['air_temperature'].attrs['units_metadata'] = 'on_scale'
 
     f.create_dataset('wind_from_direction', data=weatherFrame[' WDIR1 (&deg;)']) # adds wind from direction dataset
     f['wind_from_direction'].attrs['units'] = 'degree'
+    f['wind_from_direction'].attrs['standard_name'] = 'wind_from_direction'
 
     f.create_dataset('wind_speed', data=weatherFrame[' WSPD1 (m/s)']) # adds wind speed dataset
     f['wind_speed'].attrs['units'] = 'm s-1'
+    f['wind_speed'].attrs['standard_name'] = 'wind_speed'
 
     f.create_dataset('wind_speed_of_gust', data=weatherFrame[' GUST1 (m/s)']) # adds wind speed of gust dataset
     f['wind_speed_of_gust'].attrs['units'] = 'm s-1'
+    f['wind_speed_of_gust'].attrs['standard_name'] = 'wind_speed_of_gust'
 
     f.create_dataset('relative_humidity', data=weatherFrame[' RRH (%)']) # adds relative humidity dataset
     f['relative_humidity'].attrs['units'] = '1'
+    f['relative_humidity'].attrs['standard_name'] = 'relative_humidity'
 
-    f.create_dataset('dew_point', data=weatherFrame[' DEWPT1 (&deg;C)']) # adds dewpoint dataset
-    f['dew_point'].attrs['units'] = 'degC'
+    f.create_dataset('dew_point_temperature', data=weatherFrame[' DEWPT1 (&deg;C)']) # adds dewpoint dataset
+    f['dew_point_temperature'].attrs['units'] = 'degC'
+    f['dew_point_temperature'].attrs['standard_name'] = 'dew_point_temperature'
 
     f.create_dataset('air_pressure', data=weatherFrame[' BARO1 (hPa)'] * 100) # adds air pressure data set. Converts from hPa to Pa
     f['air_pressure'].attrs['units'] = 'Pa'
+    f['air_pressure'].attrs['standard_name'] = 'air_pressure'
 
     f.create_dataset('solar_irradiance', data=weatherFrame[' SRAD1 (W/m^2)']) # adds solar irradiance dataset
     f['solar_irradiance'].attrs['units'] = 'W m-2'
+    f['solar_irradiance'].attrs['standard_name'] = 'solar_irradiance'
 print('Done.')
