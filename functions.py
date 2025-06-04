@@ -118,6 +118,17 @@ def rxy(timeSeries1,timeSeries2,fs):
     return R12, tau, zeroLagValue, zeroLagValueNorm, C12
 
 def readH5FilesData(filePath, ch2read='all', data=None):
+    """Reads H5 files containing impact data time series.
+
+    This function takes in a path to an H5 file and returns a dictionary of time series data.
+
+    Parameters:
+        filePath (str): path to the H5 file.
+        ch2Read (str or list): channel names to read. If 'all', all channels are read. Default is 'all'.
+
+    Returns:
+        data (dict): A dictionary of time series data. The keys are the channel names and the values are the time series data.
+    """
     if data is None:
         data = {}
     with h5py.File(filePath, 'r') as f:
