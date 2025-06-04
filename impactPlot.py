@@ -138,7 +138,7 @@ def rxy(timeSeries1,timeSeries2,fs):
 
 
 if __name__ == '__main__':
-    filePath = '/Volumes/MainData/Ice2024/openAccessData/impact/sync/C3.h5'
+    filePath = '/path/to/sync/impact/file'
     print('Loading file...')
     start_time = time.time()             # defines start time for code timing
     data = readH5FilesData(filePath) # reads in h5 file
