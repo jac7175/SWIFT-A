@@ -115,7 +115,7 @@ def rxy(timeSeries1,timeSeries2,fs):
     R12 = np.concatenate((R12[negLags],R12[~negLags])) # rearrange to put in standard format (increasing lag from neg to pos)
     C12 = np.concatenate((C12[negLags], C12[~negLags])) # rearrange to put in standard format (increasing lag from neg to pos)
     tau = np.concatenate((tau[negLags],tau[~negLags])) # rearrange to put in standard format (increasing lag from neg to pos)
-    return R12, tau, zeroLagValue, zeroLagValueNorm,
+    return R12, tau, zeroLagValue, zeroLagValueNorm, C12
 
 def readH5FilesData(filePath, ch2read='all', data=None):
     if data is None:
