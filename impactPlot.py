@@ -11,7 +11,7 @@ start_time = time.time()             # defines start time for code timing
 data = functions.readH5FilesData(filePath) # reads in h5 file
 del data['dateTime']    # remove un-needed dateTime key from dictionary
 y = functions.applySensorSensitivity(data)             # apply sensor senitivities
-fs = 52100                                           # sample rate [samples/sec]
+fs = 51200                                           # sample rate [samples/sec]
 dt, N, T, df, times = functions.getSigParams(y['HydN'],fs)  # extract basic signal processing info
 
 print('Processing...')
