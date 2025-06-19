@@ -6,6 +6,8 @@ import functions
 
 
 filePath = '/path/to/sync/file/C3.h5'
+
+
 print('Loading file...')
 start_time = time.time()             # defines start time for code timing
 data = functions.readH5FilesData(filePath) # reads in h5 file
