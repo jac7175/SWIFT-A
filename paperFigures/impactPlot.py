@@ -56,41 +56,41 @@ plt.rcParams['font.family'] = 'sans-serif'  # Use sans-serif fonts
 plt.rcParams['font.sans-serif'] = 'Helvetica'  # use Helvetica
 #
 fig = plt.figure(figsize=(10, 8))
-ax1 = fig.add_subplot(4, 1, 1)
-ax2 = fig.add_subplot(4, 1, 2)
-ax3 = fig.add_subplot(4, 1, 3)
-ax4 = fig.add_subplot(4, 1, 4)
+ax1 = fig.add_subplot(4, 2, 1)
+ax2 = fig.add_subplot(4, 2, 3)
+ax3 = fig.add_subplot(4, 2, 5)
+ax4 = fig.add_subplot(4, 2, 7)
 ax1.plot(tau,Cxy[-3][12],label = '1')
 ax1.plot(tau,Cxy[-2][13],label = '2')
 ax1.plot(tau,Cxy[-1][14],label = '3')
 ax1.grid()
 ax1.set_xlim([-0.005,0.04])
-ax1.legend(ncol=3, title="Hit Index", edgecolor='k',facecolor='w',framealpha=1)
+# ax1.legend(ncol=3, title="Hit Index", edgecolor='k',facecolor='w',framealpha=1)
 ax1.set_ylim([-0.6,0.7])
 ax1.text(0.02, 0.90, "North Hydrophone", transform=ax1.transAxes,
         fontsize=10, ha='left', va='top',
         bbox=dict(boxstyle='round', facecolor='white', alpha=1))
-ax2.plot(tau,Cxy[-3][15],label = corrListLabels[-3] + ': ' + corrListLabels[15])
-ax2.plot(tau,Cxy[-2][16],label = corrListLabels[-2] + ': ' + corrListLabels[16])
-ax2.plot(tau,Cxy[-1][17],label = corrListLabels[-1] + ': ' + corrListLabels[17])
+ax2.plot(tau,Cxy[-3][15])
+ax2.plot(tau,Cxy[-2][16])
+ax2.plot(tau,Cxy[-1][17])
 ax2.grid()
 ax2.set_xlim([-0.005,0.04])
 ax2.set_ylim([-0.6,0.7])
 ax2.text(0.02, 0.90, "South Hydrophone", transform=ax2.transAxes,
         fontsize=10, ha='left', va='top',
         bbox=dict(boxstyle='round', facecolor='white', alpha=1))
-ax3.plot(tau,Cxy[-3][9],label = corrListLabels[-3] + ': ' + corrListLabels[9])
-ax3.plot(tau,Cxy[-2][10],label = corrListLabels[-2] + ': ' + corrListLabels[10])
-ax3.plot(tau,Cxy[-1][11],label = corrListLabels[-1] + ': ' + corrListLabels[11])
+ax3.plot(tau,Cxy[-3][9])
+ax3.plot(tau,Cxy[-2][10])
+ax3.plot(tau,Cxy[-1][11])
 ax3.grid()
 ax3.set_xlim([-0.005,0.04])
 ax3.set_ylim([-0.6,0.7])
 ax3.text(0.02, 0.90, "East Hydrophone", transform=ax3.transAxes,
         fontsize=10, ha='left', va='top',
         bbox=dict(boxstyle='round', facecolor='white', alpha=1))
-ax4.plot(tau,Cxy[-3][18],label = corrListLabels[-3] + ': ' + corrListLabels[18])
-ax4.plot(tau,Cxy[-2][19],label = corrListLabels[-2] + ': ' + corrListLabels[19])
-ax4.plot(tau,Cxy[-1][20],label = corrListLabels[-1] + ': ' + corrListLabels[20])
+ax4.plot(tau,Cxy[-3][18])
+ax4.plot(tau,Cxy[-2][19])
+ax4.plot(tau,Cxy[-1][20])
 ax4.grid()
 ax4.set_xlim([-0.005,0.04])
 ax4.set_xlabel('Lag  [s]')
@@ -99,7 +99,51 @@ ax4.text(0.02, 0.90, "West Hydrophone", transform=ax4.transAxes,
         fontsize=10, ha='left', va='top',
         bbox=dict(boxstyle='round', facecolor='white', alpha=1))
 fig.text(0, 0.5, 'Normalized Cross Correlation', va='center', rotation='vertical')
+
+ax5 = fig.add_subplot(4, 2, 2)
+ax6 = fig.add_subplot(4, 2, 4)
+ax7 = fig.add_subplot(4, 2, 6)
+ax8 = fig.add_subplot(4, 2, 8)
+ax5.plot(tau, Cxy[-3][21], label='1')
+ax5.plot(tau, Cxy[-2][22], label='2')
+ax5.plot(tau, Cxy[-1][23], label='3')
+ax5.grid()
+ax5.set_xlim([-0.005, 0.04])
+ax5.legend(ncol=3, title="Hit Index", edgecolor='k', facecolor='w', framealpha=1)
+ax5.set_ylim([-0.4, 0.4])
+ax5.text(0.02, 0.90, "Center Microphone", transform=ax5.transAxes,
+         fontsize=10, ha='left', va='top',
+         bbox=dict(boxstyle='round', facecolor='white', alpha=1))
+ax6.plot(tau, Cxy[-3][24])
+ax6.plot(tau, Cxy[-2][25])
+ax6.plot(tau, Cxy[-1][26])
+ax6.grid()
+ax6.set_xlim([-0.005, 0.04])
+ax6.set_ylim([-0.4, 0.4])
+ax6.text(0.02, 0.90, "East Microphone", transform=ax6.transAxes,
+         fontsize=10, ha='left', va='top',
+         bbox=dict(boxstyle='round', facecolor='white', alpha=1))
+ax7.plot(tau, Cxy[-3][27])
+ax7.plot(tau, Cxy[-2][28])
+ax7.plot(tau, Cxy[-1][29])
+ax7.grid()
+ax7.set_xlim([-0.005, 0.04])
+ax7.set_ylim([-0.4, 0.4])
+ax7.text(0.02, 0.90, "North Microphone", transform=ax7.transAxes,
+         fontsize=10, ha='left', va='top',
+         bbox=dict(boxstyle='round', facecolor='white', alpha=1))
+ax8.plot(tau, Cxy[-3][30])
+ax8.plot(tau, Cxy[-2][31])
+ax8.plot(tau, Cxy[-1][32])
+ax8.grid()
+ax8.set_xlim([-0.005, 0.04])
+ax8.set_xlabel('Lag  [s]')
+ax8.set_ylim([-0.4, 0.4])
+ax8.text(0.02, 0.90, "West Microphone", transform=ax8.transAxes,
+         fontsize=10, ha='left', va='top',
+         bbox=dict(boxstyle='round', facecolor='white', alpha=1))
+fig.text(0, 0.5, 'Normalized Cross Correlation', va='center', rotation='vertical')
 plt.tight_layout()
-fig.show()
+plt.show()
 
 print(f'Done. Completed in {np.round(time.time() - start_time,2)} seconds')
