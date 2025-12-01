@@ -208,30 +208,68 @@ def gxy(timeSeries1, timeSeries2, overlap, window, nFFT, fs, type='gxx'):
             lnspc2 = np.fft.fft(sig2, axis=0) * dt
         GxyTemp.append(2 / T_win * np.conjugate(lnspc1[0:int(nFFT / 2)]) * lnspc2[0:int(nFFT / 2)])
     Gxy_avg = np.sum(GxyTemp, axis=0) / nWins
-    Gxy_mtx = np.rot90(GxyTemp)
+    Gxy_mtx = np.flipud(np.rot90(GxyTemp))
     return Gxy_avg, Gxy_mtx, freqs, timesWin, df_win
 
-def hilbertXform(linear_spectrum,N,fs):
-    dt = 1/fs
-    neg_freq = np.zeros(int(N/2-1))
-    f0 = np.ones(1)
-    pos_freq = 2*np.ones(int(N/2-1))
-    fs_2 = np.ones(1)
-    weight = np.concatenate((f0,pos_freq,fs_2,neg_freq))
-    linear_spectrum_xformed = linear_spectrum * weight
-    complex_time_series = np.fft.ifft(linear_spectrum_xformed)/dt
-    return linear_spectrum_xformed, complex_time_series
+def cohGram(timeSeries1, timeSeries2, nFFT, fs, numWinPerCOH=16, overlap=0.5):
+    """Calculates the coherencegram of two input time series
+            Parameters:
+                timeSeries1: time series 1d array
+                timeSeries2: time series 1d array
+                overlap: overlap between subsequent blocks, range 0-1
+                window: window, 'rectangular', 'hann', 'flattop', 'hamming'
+                nFFT: number of points in FFT window
+                fs: sampling rate, samples/second
+                numWinPerCOH: number of windows per
+        """
+    dt = 1 / fs
+    timeSeries1 = np.array(timeSeries1)
+    timeSeries2 = np.array(timeSeries2)
+    N1 = np.size(timeSeries1)
+    N2 = np.size(timeSeries2)
+    if N1 > N2:
+        N = N2
+        timeSeries1 = timeSeries1[0:N]
+    elif N2 > N1:
+        N = N1
+        timeSeries2 = timeSeries1[0:N]
+    else:
+        N = N1
+    nAdv = nFFT
+    nFFTWins = int(np.floor((N - nFFT) / nAdv) + 1)
+    T_win = nFFT * dt
+    df_win = 1 / T_win
+    freqs = np.arange(0, nFFT // 2) * df_win
 
-def lin_spectrum(time_series,fs):
-    dt, N, T, df, times = getSigParams(time_series, fs)
-    linear_spectrum = np.fft.fft(time_series,axis=0)*dt
-    return linear_spectrum
-
-def env_pdf(time_series, fs, num_bins=5000):
-    N = len(time_series)
-    X = lin_spectrum(time_series, fs)
-    X_h, x_h = hilbertXform(X, N, fs)
-    env_x = np.abs(x_h)
-    pdf_env, bins = np.histogram(env_x, bins=num_bins, density=True)
-    bin_centers = (bins[:-1] + bins[1:]) / 2  # Get the midpoints of bins
-    return env_x, pdf_env, bin_centers
+    GxyTemp = []
+    GxxTemp = []
+    GyyTemp = []
+    for wIndex in np.arange(0, nFFTWins):
+        advInx = wIndex * nAdv
+        sig1 = timeSeries1[advInx:nFFT + advInx]
+        sig2 = timeSeries2[advInx:nFFT + advInx]
+        lnspc1 = np.fft.fft(sig1, axis=0) * dt
+        lnspc2 = np.fft.fft(sig2, axis=0) * dt
+        GxxTemp.append(2 / T_win * np.conjugate(lnspc1[0:int(nFFT / 2)]) * lnspc1[0:int(nFFT / 2)])
+        GyyTemp.append(2 / T_win * np.conjugate(lnspc2[0:int(nFFT / 2)]) * lnspc2[0:int(nFFT / 2)])
+        GxyTemp.append(2 / T_win * np.conjugate(lnspc1[0:int(nFFT / 2)]) * lnspc2[0:int(nFFT / 2)])
+    cohAdv = overlap * numWinPerCOH
+    NcohWins = int(np.floor((nFFTWins - numWinPerCOH) / cohAdv) + 1)
+    # Time (s) at the center of each coherence window
+    # Center FFT-window index = start_index + (numWinPerCOH - 1)/2
+    # Center sample = center_index * nAdv + nFFT/2
+    # Convert samples to seconds by multiplying by dt
+    center_fft_idx = np.arange(NcohWins) * cohAdv + (numWinPerCOH - 1) / 2
+    timesCoh = ((center_fft_idx * nAdv) + (nFFT / 2)) * dt
+    coh = []
+    for cohWindex in np.arange(0,NcohWins):
+        cohInx = int(cohWindex * cohAdv)
+        Gxx_avg = np.sum(GxxTemp[cohInx:cohInx+numWinPerCOH],axis=0)/numWinPerCOH
+        Gyy_avg = np.sum(GyyTemp[cohInx:cohInx+numWinPerCOH],axis=0)/numWinPerCOH
+        Gxy_avg = np.sum(GxyTemp[cohInx:cohInx+numWinPerCOH],axis=0)/numWinPerCOH
+        cohTemp = np.abs((np.conj(Gxy_avg) * Gxy_avg) / (Gxx_avg * Gyy_avg))
+        coh.append(cohTemp)
+    coh = np.flipud(np.rot90(coh))
+    return_dict = {'coh': coh, 'freqs': freqs, 'timesCoh': timesCoh,
+                   'df_win': df_win}
+    return return_dict
