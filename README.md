@@ -6,7 +6,7 @@ This repository supports [data uploaded to the WDC Climate repository](#data-dow
 
 This repo contains three folders:  
 [calibrationSheets](https://github.com/jac7175/SWIFT-A/tree/main/calibrationSheets): contains calibraton sheets for all acoustic sensors used during data acquisition.  
-[paperFgures](https://github.com/jac7175/SWIFT-A/tree/main/paperFigures): contains the code used to create the Figures (), () and () in the accompanying [data description paper](#data-description-paper).
+[paperFgures](https://github.com/jac7175/SWIFT-A/tree/main/paperFigures): contains the code used to create the Figures 9-14 in the accompanying [data description paper](#data-description-paper).
 [productDataSheets](https://github.com/jac7175/SWIFT-A/tree/main/productDataSheets): contains the factory product data sheets for each acoustic sensor type used during data acquisition.
 
 ## Data Download
