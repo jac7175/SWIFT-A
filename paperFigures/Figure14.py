@@ -89,10 +89,7 @@ S, residuals, rank, s = np.linalg.lstsq(X, T, rcond=None)  # u = least square so
 norm_S = np.linalg.norm(S)
 c_est1 = np.sqrt(1/(S[0]**2 + S[1]**2 + S[2]**2)) # should be the same as below
 c_est2 = 1/norm_S # should be the same as above
-
 azimuth_deg = np.degrees(np.arctan2(S[1], S[0]))
-# elevation_deg = np.degrees(np.arcsin(S[2]))
-
 
 # Set up plot formatting to use Computer Modern font
 font = {'family': 'serif',
