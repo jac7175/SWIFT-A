@@ -101,13 +101,11 @@ plt.rcParams.update({
     "mathtext.fontset": "cm",
     "axes.formatter.use_mathtext": True
 })
-
 fig, ax1 = plt.subplots(figsize=(12, 6))
-# fig.suptitle(pltTitle + ', Hydrophone - Hydrophone, Hit 0', fontsize=14)
-ax1.plot(tau, corrList['HydN, Hit 0']['HydN, Hit 0']['Cxy'], label='N-N')
-ax1.plot(tau, corrList['HydN, Hit 0']['HydS, Hit 0']['Cxy'], label='N-S')
-ax1.plot(tau, corrList['HydN, Hit 0']['HydE, Hit 0']['Cxy'], label='N-E')
-ax1.plot(tau, corrList['HydN, Hit 0']['HydW, Hit 0']['Cxy'], label='N-W')
+ax1.plot(tau, corrList['HydN, Hit 0']['HydN, Hit 0']['Cxy'], label='HydN-HydN')
+ax1.plot(tau, corrList['HydN, Hit 0']['HydS, Hit 0']['Cxy'], label='HydN-HydS')
+ax1.plot(tau, corrList['HydN, Hit 0']['HydE, Hit 0']['Cxy'], label='HydN-HydE')
+ax1.plot(tau, corrList['HydN, Hit 0']['HydW, Hit 0']['Cxy'], label='HydN-HydW')
 
 for k in ['HydN, Hit 0','HydS, Hit 0','HydE, Hit 0','HydW, Hit 0']:
     ax1.plot(
@@ -118,12 +116,13 @@ for k in ['HydN, Hit 0','HydS, Hit 0','HydE, Hit 0','HydW, Hit 0']:
 ax1.legend()
 ax1.set_xlim([-0.005, 0.02])
 ax1.set_xlabel('Lag [s]')
-ax1.set_ylabel('Normalized Cross Correlation')
+ax1.set_ylabel(r'Normalized Cross Correlation, $C_{xy}$')
+ax1.axhline(y=0, color='black',alpha=0.5,linewidth=0.5)
 ax2 = inset_axes(
     ax1,
     width="130%",
     height="130%",
-    bbox_to_anchor=(0.60, 0.55, 0.3, 0.3),  # << move left/down here
+    bbox_to_anchor=(0.55, 0.55, 0.3, 0.3),
     bbox_transform=ax1.transAxes,
     axes_class=plt.PolarAxes,
     loc='upper right')
