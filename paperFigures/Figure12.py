@@ -2,7 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import scipy as sp
 import time
-import os
 from itertools import combinations
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 import functions as func  # import custom functions
