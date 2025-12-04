@@ -71,8 +71,8 @@ plt.rcParams.update({
     "mathtext.fontset": "cm",
     "axes.formatter.use_mathtext": True
 })
-label_hDist = 0.96
-label_vDist = 0.9
+label_hDist = 0.95
+label_vDist = 0.91
 label_fSize = 16
 label_ha = 'right'
 label_bbox = dict(boxstyle='round', facecolor='white', alpha=1)
