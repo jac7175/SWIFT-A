@@ -2,7 +2,7 @@ import numpy as np
 import time
 import matplotlib.pyplot as plt
 import scipy as sp
-from scipy.signal import butter
+from scipy.signal import butter, sosfiltfilt
 import matplotlib.lines as mlines
 import functions as func   # import custom functions
 
@@ -16,6 +16,15 @@ data = func.readH5FilesData(filePath) # reads in h5 file
 del data['dateTime']                  # remove un-needed dateTime key from dictionary
 fs = 51200                                           # sample rate [samples/sec]
 dt, N, T, df, times = func.getSigParams(data['HydN'],fs)  # extract basic signal processing info
+
+cut_low = 4.5
+cut_high = 90
+filt_order = 5
+sos = butter(filt_order, [cut_low, cut_high], btype='bandpass', fs=fs, output='sos')
+data['GeoU'] = sosfiltfilt(sos, data['GeoU'])  # filtfilt to ensure no phase distortion
+data['GeoN'] = sosfiltfilt(sos, data['GeoN'])  # filtfilt to ensure no phase distortion
+data['GeoW'] = sosfiltfilt(sos, data['GeoW'])  # filtfilt to ensure no phase distortion
+
 
 print('Processing...')
 peaks = sp.signal.find_peaks(data['force_hammer'],height=0.5*np.max(data['force_hammer']),distance=fs*1)  # extract peaks (min dist of 0.5 sec, 1000N) from hammer channel
@@ -54,7 +63,7 @@ tau = RxyZip[0][0][1]  # lag vector (same across all hits/channels)
 
 # Set up plot formatting to use Computer Modern font
 font = {'family': 'serif',
-        'size': 12,
+        'size': 16,
         'serif': 'cmr10'
         }
 plt.rc('font', **font)
@@ -62,107 +71,119 @@ plt.rcParams.update({
     "mathtext.fontset": "cm",
     "axes.formatter.use_mathtext": True
 })
-label_hDist = 0.97
-fig = plt.figure(figsize=(10, 8))
-ax1 = fig.add_subplot(4, 2, 1)
-ax2 = fig.add_subplot(4, 2, 3)
-ax3 = fig.add_subplot(4, 2, 5)
-ax4 = fig.add_subplot(4, 2, 7)
-ax1.plot(tau,Cxy[-3][12],label = '1')
-ax1.plot(tau,Cxy[-2][13],label = '2')
-ax1.plot(tau,Cxy[-1][14],label = '3')
-ax1.grid()
-ax1.set_xlim([-0.005,0.04])
-# ax1.legend(ncol=3, title="Hit Index", edgecolor='k',facecolor='w',framealpha=1)
-ax1.set_ylim([-0.6,0.75])
-ax1.text(label_hDist, 0.90, "North Hydrophone", transform=ax1.transAxes,
-        fontsize=12, ha='right', va='top',
-        bbox=dict(boxstyle='round', facecolor='white', alpha=1))
-ax2.plot(tau,Cxy[-3][15])
-ax2.plot(tau,Cxy[-2][16])
-ax2.plot(tau,Cxy[-1][17])
-ax2.grid()
-ax2.set_xlim([-0.005,0.04])
-ax2.set_ylim([-0.6,0.75])
-ax2.text(label_hDist, 0.90, "South Hydrophone", transform=ax2.transAxes,
-        fontsize=12, ha='right', va='top',
-        bbox=dict(boxstyle='round', facecolor='white', alpha=1))
-ax3.plot(tau,Cxy[-3][9])
-ax3.plot(tau,Cxy[-2][10])
-ax3.plot(tau,Cxy[-1][11])
-ax3.grid()
-ax3.set_xlim([-0.005,0.04])
-ax3.set_ylim([-0.6,0.75])
-ax3.text(label_hDist, 0.90, "East Hydrophone", transform=ax3.transAxes,
-        fontsize=12, ha='right', va='top',
-        bbox=dict(boxstyle='round', facecolor='white', alpha=1))
-ax4.plot(tau,Cxy[-3][18])
-ax4.plot(tau,Cxy[-2][19])
-ax4.plot(tau,Cxy[-1][20])
-ax4.grid()
-ax4.set_xlim([-0.005,0.04])
-ax4.set_xlabel('Lag  [s]')
-ax4.set_ylim([-0.6,0.85])
-ax4.text(label_hDist, 0.90, "West Hydrophone", transform=ax4.transAxes,
-        fontsize=12, ha='right', va='top',
-        bbox=dict(boxstyle='round', facecolor='white', alpha=1))
-fig.text(0, 0.5, 'Normalized Cross Correlation', va='center', rotation='vertical')
-ax5 = fig.add_subplot(4, 2, 2)
-ax6 = fig.add_subplot(4, 2, 4)
-ax7 = fig.add_subplot(4, 2, 6)
-ax8 = fig.add_subplot(4, 2, 8)
-ax5.plot(tau, Cxy[-3][21], label='1')
-ax5.plot(tau, Cxy[-2][22], label='2')
-ax5.plot(tau, Cxy[-1][23], label='3')
-ax5.grid()
-ax5.set_xlim([-0.005, 0.04])
-ax5.set_ylim([-0.5, 0.4])
-ax5.text(label_hDist, 0.90, "Center Microphone", transform=ax5.transAxes,
-         fontsize=12, ha='right', va='top',
-         bbox=dict(boxstyle='round', facecolor='white', alpha=1))
-ax6.plot(tau, Cxy[-3][24])
-ax6.plot(tau, Cxy[-2][25])
-ax6.plot(tau, Cxy[-1][26])
-ax6.grid()
-ax6.set_xlim([-0.005, 0.04])
-ax6.set_ylim([-0.4, 0.4])
-ax6.text(label_hDist, 0.90, "East Microphone", transform=ax6.transAxes,
-         fontsize=12, ha='right', va='top',
-         bbox=dict(boxstyle='round', facecolor='white', alpha=1))
-ax7.plot(tau, Cxy[-3][27])
-ax7.plot(tau, Cxy[-2][28])
-ax7.plot(tau, Cxy[-1][29])
-ax7.grid()
-ax7.set_xlim([-0.005, 0.04])
-ax7.set_ylim([-0.4, 0.4])
-ax7.text(label_hDist, 0.90, "North Microphone", transform=ax7.transAxes,
-         fontsize=12, ha='right', va='top',
-         bbox=dict(boxstyle='round', facecolor='white', alpha=1))
-ax8.plot(tau, Cxy[-3][30])
-ax8.plot(tau, Cxy[-2][31])
-ax8.plot(tau, Cxy[-1][32])
-ax8.grid()
-ax8.set_xlim([-0.005, 0.04])
-ax8.set_xlabel('Lag  [s]')
-ax8.set_ylim([-0.4, 0.4])
-ax8.text(label_hDist, 0.90, "West Microphone", transform=ax8.transAxes,
-         fontsize=12, ha='right', va='top',
-         bbox=dict(boxstyle='round', facecolor='white', alpha=1))
-fig.text(0, 0.5, 'Normalized Cross Correlation', va='center', rotation='vertical')
-title_handle = mlines.Line2D([], [], color='none')  # invisible item
+label_hDist = 0.96
+label_vDist = 0.9
+label_fSize = 16
+label_ha = 'right'
+label_bbox = dict(boxstyle='round', facecolor='white', alpha=1)
+fig = plt.figure(figsize=(15, 7))
+
+# Row 1 (Hydrophones)
+ax1 = fig.add_subplot(3, 4, 1)
+ax2 = fig.add_subplot(3, 4, 2)
+ax3 = fig.add_subplot(3, 4, 3)
+ax4 = fig.add_subplot(3, 4, 4)
+
+# Row 2 (Microphones)
+ax5 = fig.add_subplot(3, 4, 5)
+ax6 = fig.add_subplot(3, 4, 6)
+ax7 = fig.add_subplot(3, 4, 7)
+ax8 = fig.add_subplot(3, 4, 8)
+
+# Row 3 (Geophones, force hammer)
+ax9 = fig.add_subplot(3, 4, 9)
+ax10 = fig.add_subplot(3, 4, 10)
+ax11= fig.add_subplot(3, 4, 11)
+ax12 = fig.add_subplot(3, 4, 12)
+
+fig.subplots_adjust(
+    left=0.2,
+    right=1.0,
+    top=0.93,
+    bottom=0.09,
+    wspace=0.25,
+    hspace=0.25
+)
+# --------- HYDROPHONES (TOP ROW) ---------
+ax1.plot(tau, Cxy[-3][12]); ax1.plot(tau, Cxy[-2][13]); ax1.plot(tau, Cxy[-1][14])
+ax1.grid(); ax1.set_xlim([-0.005, 0.04]); ax1.set_ylim([-0.6, 0.85])
+ax1.text(label_hDist, label_vDist, "HydN", transform=ax1.transAxes,
+        fontsize=label_fSize, ha=label_ha, va='top',
+        bbox=label_bbox)
+ax2.plot(tau, Cxy[-3][15]); ax2.plot(tau, Cxy[-2][16]); ax2.plot(tau, Cxy[-1][17])
+ax2.grid(); ax2.set_xlim([-0.005, 0.04]); ax2.set_ylim([-0.6, 0.85])
+ax2.text(label_hDist, label_vDist, "HydS", transform=ax2.transAxes,
+        fontsize=label_fSize, ha=label_ha, va='top',
+        bbox=label_bbox)
+ax3.plot(tau, Cxy[-3][9]); ax3.plot(tau, Cxy[-2][10]); ax3.plot(tau, Cxy[-1][11])
+ax3.grid(); ax3.set_xlim([-0.005, 0.04]); ax3.set_ylim([-0.6, 0.85])
+ax3.text(label_hDist, label_vDist, "HydE", transform=ax3.transAxes,
+        fontsize=label_fSize, ha=label_ha, va='top',
+        bbox=label_bbox)
+ax4.plot(tau, Cxy[-3][18]); ax4.plot(tau, Cxy[-2][19]); ax4.plot(tau, Cxy[-1][20])
+ax4.grid(); ax4.set_xlim([-0.005, 0.04]); ax4.set_ylim([-0.6, 0.85])
+ax4.text(label_hDist, label_vDist, "HydW", transform=ax4.transAxes,
+        fontsize=label_fSize, ha=label_ha, va='top',
+        bbox=label_bbox)
+
+# --------- MICROPHONES (MIDDLE ROW) ---------
+ax5.plot(tau, Cxy[-3][21]); ax5.plot(tau, Cxy[-2][22]); ax5.plot(tau, Cxy[-1][23])
+ax5.grid(); ax5.set_xlim([-0.005, 0.04]); ax5.set_ylim([-0.5, 0.5])
+ax5.text(label_hDist, label_vDist, "MicC", transform=ax5.transAxes,
+         fontsize=label_fSize, ha=label_ha, va='top',
+         bbox=label_bbox)
+ax6.plot(tau, Cxy[-3][24]); ax6.plot(tau, Cxy[-2][25]); ax6.plot(tau, Cxy[-1][26])
+ax6.grid(); ax6.set_xlim([-0.005, 0.04]); ax6.set_ylim([-0.5, 0.5])
+ax6.text(label_hDist, label_vDist, "MicE", transform=ax6.transAxes,
+         fontsize=label_fSize, ha=label_ha, va='top',
+         bbox=label_bbox)
+ax7.plot(tau, Cxy[-3][27]); ax7.plot(tau, Cxy[-2][28]); ax7.plot(tau, Cxy[-1][29])
+ax7.grid(); ax7.set_xlim([-0.005, 0.04]); ax7.set_ylim([-0.5, 0.5])
+ax7.text(label_hDist, label_vDist, "MicN", transform=ax7.transAxes,
+         fontsize=label_fSize, ha=label_ha, va='top',
+         bbox=label_bbox)
+ax8.plot(tau, Cxy[-3][30]); ax8.plot(tau, Cxy[-2][31]); ax8.plot(tau, Cxy[-1][32])
+ax8.grid(); ax8.set_xlim([-0.005, 0.04]); ax8.set_ylim([-0.5, 0.5])
+ax8.text(label_hDist, label_vDist, "MicW", transform=ax8.transAxes,
+         fontsize=label_fSize, ha=label_ha, va='top',
+         bbox=label_bbox)
+
+# --------- GEOPHONES, HAMMER (BOTTOM ROW) ---------
+ax9.plot(tau, Cxy[-3][0]); ax9.plot(tau, Cxy[-2][1]); ax9.plot(tau, Cxy[-1][2])
+ax9.grid(); ax9.set_xlim([-0.005, 0.04]); ax9.set_ylim([-0.5, 0.5])
+ax9.text(label_hDist, label_vDist, "GeoN", transform=ax9.transAxes,
+         fontsize=label_fSize, ha=label_ha, va='top',
+         bbox=label_bbox)
+ax10.plot(tau, Cxy[-3][3]); ax10.plot(tau, Cxy[-2][4]); ax10.plot(tau, Cxy[-1][5])
+ax10.grid(); ax10.set_xlim([-0.005, 0.04]); ax10.set_ylim([-0.5, 0.5])
+ax10.text(label_hDist, label_vDist, "GeoU", transform=ax10.transAxes,
+         fontsize=label_fSize, ha=label_ha, va='top',
+         bbox=label_bbox)
+ax11.plot(tau, Cxy[-3][6]); ax11.plot(tau, Cxy[-2][7]); ax11.plot(tau, Cxy[-1][8])
+ax11.grid(); ax11.set_xlim([-0.005, 0.04]); ax11.set_ylim([-0.5, 0.5])
+ax11.text(label_hDist, label_vDist, "GeoW", transform=ax11.transAxes,
+         fontsize=label_fSize, ha=label_ha, va='top',
+         bbox=label_bbox)
+ax12.plot(tau, Cxy[-3][-3]); ax12.plot(tau, Cxy[-2][-2]); ax12.plot(tau, Cxy[-1][-1])
+ax12.grid(); ax12.set_xlim([-0.005, 0.04]); ax12.set_ylim([-0.1, 1.1])
+ax12.text(label_hDist, label_vDist, "Hammer", transform=ax12.transAxes,
+         fontsize=label_fSize, ha=label_ha, va='top',
+         bbox=label_bbox)
+
+fig.text(0.01, 0.5, 'Normalized Cross Correlation, $C_{xy}$', va='center', rotation='vertical')
+fig.text(0.5, 0.025, 'Lag [s]', va='center')
+title_handle = mlines.Line2D([], [], color='none')
 h1 = mlines.Line2D([], [], color='C0')
 h2 = mlines.Line2D([], [], color='C1')
 h3 = mlines.Line2D([], [], color='C2')
-legend_handles = [title_handle, h1, h2, h3]
-legend_labels = ["Impact number:", "1", "2", "3"]
-fig.tight_layout()
-fig.subplots_adjust(top=0.93)
-fig.legend(legend_handles, legend_labels,
-           ncol=4,  # keep them on one line
+fig.legend([title_handle, h1, h2, h3],
+           ["Impact number:", "1", "2", "3"],
+           ncol=4,
            handlelength=1.5,
            edgecolor='k',
            facecolor='w',
            framealpha=1,
            loc='upper center',
-           bbox_to_anchor=(0.5, 1.0))
+           bbox_to_anchor=(0.5, 1.01))
+fig.tight_layout(rect=[0.015, 0.015, 1, 0.95])
 fig.show()
