@@ -9,6 +9,7 @@ import functions as func  # import custom functions
 ####### --- Insert file path here --- #######
 filePath = '/path/to/030224_105346.h5'
 ####### ----------------------------- #######
+# filePath = "/Volumes/dataStorageHome/passive_new/030224_105346.h5"
 
 timeName = filePath[-16:-3]   # extract time from file name
 keys = ['HydN', 'HydW'] # sensors to process
@@ -150,7 +151,7 @@ ax3.text(
 
 # ---- Avg coherence vs frequency (ax4) ----
 ax4.plot(coh_avg, freqs, 'k')
-ax4.set_xlabel(r"$\langle \gamma^2 \rangle_f$")
+ax4.set_xlabel(r"$\langle \gamma^2 \rangle_t$")
 ax4.plot(coh_avg_frac, freqs, 'r')
 ax4.set_ylim([0, 5000])
 ax4.set_xlim([0, 1])
@@ -162,7 +163,7 @@ ax4.set_position([pos4.x0 - 0.03, pos4.y0, pos4.width, pos4.height * 0.80])
 ax5.plot(timesCoh, coh_avg_time, 'k')
 ax5.axvline(x=frac_st_time, color='r', linestyle='--', linewidth=2)
 ax5.axvline(x=frac_ed_time, color='r', linestyle='--', linewidth=2)
-ax5.set_ylabel(r"$\langle \gamma^2 \rangle_t$")
+ax5.set_ylabel(r"$\langle \gamma^2 \rangle_f$")
 ax5.set_xlabel("Time [s]")
 ax5.set_ylim([0, 1])
 pos5 = ax5.get_position()
@@ -184,4 +185,5 @@ fig.add_artist(plt.Line2D(
     color='black',
     linewidth=1.5
 ))
+# plt.savefig("/Users/johncase/Desktop/Figure9.pdf", format='pdf')
 plt.show()

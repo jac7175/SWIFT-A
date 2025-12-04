@@ -9,6 +9,7 @@ import functions as func  # import custom functions
 ####### --- Insert file path here --- #######
 filePath = '/path/to/C8.h5'
 ####### ----------------------------- #######
+# filePath = "/Volumes/dataStorageHome/impact/sync/C8.h5"
 
 print('Loading file...')
 start_time = time.time()  # defines start time for code timing
@@ -50,8 +51,6 @@ for key1 in list(corrList.keys()):  # loop calcs Rxy, Cxy, zeroLag and time shif
         corrList[key1][key2]['Cxy_max_index'] = np.argmax(corrList[key1][key2]['Cxy'])
         corrList[key1][key2]['Cxy_max_value'] = corrList[key1][key2]['Cxy'][corrList[key1][key2]['Cxy_max_index']]
         corrList[key1][key2]['peak_time_diff'] = tau[corrList[key1][key2]['Cxy_max_index']]
-
-pltTitle = 'Location: ' + os.path.splitext(os.path.basename(filePath))[0]
 
 # Time difference of arrival (DOA) values
 tdoas = np.array([
@@ -114,7 +113,7 @@ for k in ['HydN, Hit 0','HydS, Hit 0','HydE, Hit 0','HydW, Hit 0']:
     )
 ax1.legend()
 ax1.set_xlim([-0.005, 0.02])
-ax1.set_xlabel('Lag [s]')
+ax1.set_xlabel(r'Lag, $\tau$ [s]')
 ax1.set_ylabel(r'Normalized Cross Correlation, $C_{xy}$')
 ax1.axhline(y=0, color='black',alpha=0.5,linewidth=0.5)
 ax2 = inset_axes(
@@ -142,4 +141,5 @@ ax2.set_thetagrids(angles, labels=[rf"{a}$^\circ$" for a in angles])
 title_str = rf"DOA = {azimuth_deg+180 + 180:.1f}$^\circ$"
 ax2.set_title(title_str, va='bottom')
 plt.tight_layout()
+# plt.savefig("/Users/johncase/Desktop/Figure12.pdf", format='pdf')
 plt.show()

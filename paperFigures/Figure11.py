@@ -9,6 +9,7 @@ import functions as func   # import custom functions
 ####### --- Insert file path here --- #######
 filePath = '/path/to/A7.h5'
 ####### ----------------------------- #######
+# filePath = "/Volumes/dataStorageHome/impact/sync/A7.h5"
 
 print('Loading file...')
 start_time = time.time()             # defines start time for code timing
@@ -171,7 +172,7 @@ ax12.text(label_hDist, label_vDist, "Hammer", transform=ax12.transAxes,
          bbox=label_bbox)
 
 fig.text(0.01, 0.5, 'Normalized Cross Correlation, $C_{xy}$', va='center', rotation='vertical')
-fig.text(0.5, 0.025, 'Lag [s]', va='center')
+fig.text(0.5, 0.025, r'Lag, $\tau$ [s]', va='center')
 title_handle = mlines.Line2D([], [], color='none')
 h1 = mlines.Line2D([], [], color='C0')
 h2 = mlines.Line2D([], [], color='C1')
@@ -183,7 +184,9 @@ fig.legend([title_handle, h1, h2, h3],
            edgecolor='k',
            facecolor='w',
            framealpha=1,
+
            loc='upper center',
            bbox_to_anchor=(0.5, 1.01))
 fig.tight_layout(rect=[0.015, 0.015, 1, 0.95])
+# plt.savefig("/Users/johncase/Desktop/Figure11.pdf", format='pdf')
 fig.show()
