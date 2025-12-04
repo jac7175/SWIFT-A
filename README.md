@@ -20,10 +20,10 @@ Paper citation to be included.
 ### Reproducing paper figures
 
 * Data may be downloaded by following [Data Download](#data-download)
-* To reproduce Figures 9 and 10, modify line 7 of [Figure9_10.py](paperFigures/Figures9_10.py) to point to passive file: 030224_105346.h5
-* To reproduce Figure 11 and 12, modify line 8 of [Figure11_12.py](paperFigures/Figures11_12.py) to point to passive file: 022624_191850.h5
-* To reproduce Figure 13, modify line 10 of [Figure13.py](paperFigures/Figures13.py) to point to impact file: A7.h5
-* To reproduce Figure 14, modify line 11 of [Figure14.py](paperFigures/Figures14.py) to point to impact file: C8.h5
+* To reproduce Figure 9, modify line 7 of [Figure9.py](paperFigures/Figures9.py) to point to passive file: 030224_105346.h5
+* To reproduce Figure 10, modify line 8 of [Figure10.py](paperFigures/Figures10.py) to point to passive file: 022624_191850.h5
+* To reproduce Figure 11, modify line 11 of [Figure11.py](paperFigures/Figures11.py) to point to impact file: A7.h5
+* To reproduce Figure 12, modify line 12 of [Figure12.py](paperFigures/Figures12.py) to point to impact file: C8.h5
 
 ## Authors
 
